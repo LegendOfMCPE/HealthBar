@@ -1,0 +1,8 @@
+#Change the position of the health
+#above: Put the health above the player Nametag
+#under: Put the health under the player Nametag
+position: under
+
+#Change the health style
+#Checkout our styles list at: https://github.com/LegendOfMCPE/HealthBar/wiki/Styles-list
+style: default
