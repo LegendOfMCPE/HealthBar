@@ -1,6 +1,0 @@
----
-default:
-- @cur@ / @max@ hearts
-- @chatname@
-graphical: #=~-#@cur@##.#@rem@@linebreak@@chatname
-...
