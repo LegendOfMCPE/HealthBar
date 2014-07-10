@@ -34,7 +34,7 @@ class Loader extends PluginBase implements Listener{
         if($style == "default"){
             $style = $player->getHealth() . "/" . $player->getMaxHealth();
         }else{
-            $this->getServer()->getLogger()->error("[HealthBar] Unknown style");
+            $this->getLogger()->error("Unknown style");
             return false;
         }
         if($position == "above"){
@@ -42,9 +42,9 @@ class Loader extends PluginBase implements Listener{
         }elseif($position == "under"){
             $player->setNameTag($player->getDisplayName() . "\n" . $style);
         }else{
-            $this->getServer()->getLogger()->error("[HealthBar] Unknown position");
+            $this->getLogger()->error("Unknown position");
             return false;
         }
         return true;
     }
-} 
+}
