@@ -2,6 +2,7 @@
 namespace HealthBar;
 
 use pocketmine\event\Listener;
+use pocketmine\event\entity;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
@@ -22,9 +23,25 @@ class Loader extends PluginBase implements Listener{
         $this->updateHealthBar($event->getPlayer());
     }
 
-    //TODO!
-    public function onPlayerHealthChange($event){
-        //$this->updateHealthBar($event->getPlayer());
+    public function onRegainHealth(entity\EntityRegainHealthEvent $event){
+        $player = $event->getEntity();
+        if($player instanceof Player){
+            $this->updateHealthBar($player);
+        }
+    }
+
+    public function onAttacked(entity\EntityDamagedByEntityEvent $event){
+        $player = $event->getEntity();
+        if($player instanceof Player){
+            $this->updateHealthBar($player);
+        }
+    }
+
+    public function onAttacked(entity\EntityDamageEvent $event){
+        $player = $event->getEntity();
+        if($player instanceof Player){
+            $this->updateHealthBar($player);
+        }
     }
 
     public function updateHealthBar(Player $player){
