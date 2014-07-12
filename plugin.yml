@@ -1,7 +1,7 @@
 name: HealthBar
 main: HealthBar\Loader
 version: 1.0.0
-api: [1.0.0]
+api: [1.1.0]
 author: iksaku
 website: https://github.com/LegendOfMCPE/HealthBar
 
