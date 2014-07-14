@@ -15,6 +15,7 @@ class Loader extends PluginBase implements Listener{
 
     public function onEnable(){
         $this->saveDefaultConfig();
+        $this->getServer()->getCommandMap()->register("healthbar", new HealthBarCommand($this));
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->checkConfiguration();
     }
@@ -174,13 +175,13 @@ class Loader extends PluginBase implements Listener{
                 $player->setNameTag($style . "\n" . $player->getDisplayName());
                 break;
             case "under":
-                $player->setNameTag($style . "\n" . $player->getDisplayName());
+                $player->setNameTag($player->getDisplayName() . "\n" . $style);
                 break;
             case "left":
                 $player->setNameTag($style . " " . $player->getDisplayName());
                 break;
             case "right":
-                $player->setNameTag($style . " " . $player->getDisplayName());
+                $player->setNameTag($player->getDisplayName() . " " . $style);
                 break;
         }
         return true;
