@@ -105,10 +105,8 @@ class Loader extends PluginBase implements Listener{
 
     public function getPosition(){
         $position = $this->getConfig()->get("position");
-        if($position == "above"){
-            return "above";
-        }elseif($position == "under"){
-            return "under";
+        if($position == "above" || $position == "under" || $position == "left" || $position == "right"){
+            return $position;
         }else{
             return false;
         }
@@ -118,14 +116,25 @@ class Loader extends PluginBase implements Listener{
         $style = $this->getStyle();
         $position = $this->getPosition();
 
-        if($style == "default"){
-            $style = $player->getHealth() . "/" . $player->getMaxHealth();
+        switch($style){
+            case "default":
+                $style = "[" . $player->getHealth() . "/" . $player->getMaxHealth() . "]";
+                break;
         }
 
-        if($position == "above"){
-            $player->setNameTag($style . "\n" . $player->getDisplayName());
-        }elseif($position == "under"){
-            $player->setNameTag($player->getDisplayName() . "\n" . $style);
+        switch($position){
+            case "above":
+                $player->setNameTag($style . "\n" . $player->getDisplayName());
+                break;
+            case "under":
+                $player->setNameTag($style . "\n" . $player->getDisplayName());
+                break;
+            case "left":
+                $player->setNameTag($style . " " . $player->getDisplayName());
+                break;
+            case "right":
+                $player->setNameTag($style . " " . $player->getDisplayName());
+                break;
         }
         return true;
     }
