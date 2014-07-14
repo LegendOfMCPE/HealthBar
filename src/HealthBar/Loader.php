@@ -94,6 +94,20 @@ class Loader extends PluginBase implements Listener{
      *
      */
 
+    public function getPlayer($player){
+        $r = "";
+        foreach($this->getServer()->getOnlinePlayers() as $p){
+            if(strtolower($p->getDisplayName()) == strtolower($player) || strtolower($p->getName()) == strtolower($player)){
+                $r = $this->getServer()->getPlayerExact($p->getName());
+            }
+        }
+        if($r == ""){
+            return false;
+        }else{
+            return $r;
+        }
+    }
+
     public function getStyle(){
         $style = $this->getConfig()->get("style");
         if($style == "default"){
@@ -112,9 +126,42 @@ class Loader extends PluginBase implements Listener{
         }
     }
 
+    public function setStyle($style){
+        switch($style){
+            case "default":
+                $this->getConfig()->set("style", $style);
+                break;
+        }
+        $this->getConfig()->save();
+        foreach($this->getServer()->getOnlinePlayers() as $p){
+            $this->updateHealthBar($p);
+        }
+        return true;
+    }
+
+    public function setPosition($position){
+        switch($position){
+            case "above":
+            case "under":
+            case "left":
+            case "right":
+                $this->getConfig()->set("position", $position);
+                break;
+        }
+        $this->getConfig()->save();
+        foreach($this->getServer()->getOnlinePlayers() as $p){
+            $this->updateHealthBar($p);
+        }
+        return true;
+    }
+
     public function updateHealthBar(Player $player){
         $style = $this->getStyle();
         $position = $this->getPosition();
+
+        if($style === false || $position === false){
+            return false;
+        }
 
         switch($style){
             case "default":
