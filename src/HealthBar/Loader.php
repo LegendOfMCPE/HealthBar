@@ -35,6 +35,9 @@ class Loader extends PluginBase implements Listener{
         $this->updateHealthBar($event->getPlayer());
     }
 
+    /**
+     * @param EntityRegainHealthEvent $event
+     */
     public function onRegainHealth(EntityRegainHealthEvent $event){
         $entity = $event->getEntity();
         if($entity instanceof Player){
@@ -42,6 +45,9 @@ class Loader extends PluginBase implements Listener{
         }
     }
 
+    /**
+     * @param EntityDamageEvent $event
+     */
     public function onHealthLose(EntityDamageEvent $event){
         $entity = $event->getEntity();
         if($entity instanceof Player){
@@ -49,6 +55,9 @@ class Loader extends PluginBase implements Listener{
         }
     }
 
+    /**
+     * @param EntityDamageByEntityEvent $event
+     */
     public function onAttack(EntityDamageByEntityEvent $event){
         $entity = $event->getEntity();
         if($entity instanceof Player){
