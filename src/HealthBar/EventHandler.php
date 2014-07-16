@@ -20,7 +20,8 @@ class EventHandler implements Listener{
      * @param PlayerJoinEvent $event
      */
     public function onPlayerJoin(PlayerJoinEvent $event){
-        $this->plugin->updateHealthBar($event->getPlayer());
+        $player = $event->getPlayer();
+        $this->plugin->updateHealthBar($player);
     }
 
     /**

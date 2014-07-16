@@ -122,10 +122,12 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                         }
                         switch($args[1]){
                             case "on":
+                                $sender->sendMessage(TextFormat::YELLOW . "Setting your HealthBar...");
                                 $this->plugin->updateHealthBar($sender);
                                 return true;
                                 break;
                             case "off":
+                                $sender->sendMessage(TextFormat::YELLOW . "Removing your HealthBar...");
                                 $this->plugin->removeHealthBar($sender);
                                 return true;
                                 break;
@@ -156,10 +158,14 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                     }else{
                         switch($args[1]){
                             case "on":
+                                $sender->sendMessage(TextFormat::YELLOW . "Setting player' HealthBar...");
+                                $player->sendMessage(TextFormat::YELLOW . "Setting your HealthBar...");
                                 $this->plugin->updateHealthBar($player);
                                 return true;
                                 break;
                             case "off":
+                                $sender->sendMessage(TextFormat::YELLOW . "Removing player' HealthBar...");
+                                $player->sendMessage(TextFormat::YELLOW . "Removing your HealthBar...");
                                 $this->plugin->removeHealthBar($player);
                                 return true;
                                 break;
