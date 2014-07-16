@@ -1,22 +1,17 @@
 <?php
 namespace HealthBar;
 
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\event\entity\EntityRegainHealthEvent;
-use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 
-class Loader extends PluginBase implements Listener{
+class Loader extends PluginBase{
     private $canRemove;
 
     public function onEnable(){
         $this->saveDefaultConfig();
         $this->getServer()->getCommandMap()->register("healthbar", new HealthBarCommand($this));
-        $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        $this->getServer()->getPluginManager()->registerEvents(new EventHandler($this), $this);
         $this->checkConfiguration();
     }
 
@@ -25,43 +20,6 @@ class Loader extends PluginBase implements Listener{
             foreach($this->getServer()->getOnlinePlayers() as $p){
                 $this->removeHealthBar($p);
             }
-        }
-    }
-
-    /**
-     * @param PlayerJoinEvent $event
-     */
-    public function onPlayerJoin(PlayerJoinEvent $event){
-        $this->updateHealthBar($event->getPlayer());
-    }
-
-    /**
-     * @param EntityRegainHealthEvent $event
-     */
-    public function onRegainHealth(EntityRegainHealthEvent $event){
-        $entity = $event->getEntity();
-        if($entity instanceof Player){
-            $this->updateHealthBar($entity);
-        }
-    }
-
-    /**
-     * @param EntityDamageEvent $event
-     */
-    public function onHealthLose(EntityDamageEvent $event){
-        $entity = $event->getEntity();
-        if($entity instanceof Player){
-            $this->updateHealthBar($entity);
-        }
-    }
-
-    /**
-     * @param EntityDamageByEntityEvent $event
-     */
-    public function onAttack(EntityDamageByEntityEvent $event){
-        $entity = $event->getEntity();
-        if($entity instanceof Player){
-            $this->updateHealthBar($entity);
         }
     }
 
@@ -165,9 +123,12 @@ class Loader extends PluginBase implements Listener{
         return true;
     }
 
-    public function updateHealthBar(Player $player){
+    public function updateHealthBar(Player $player, $health = false){
         $style = $this->getStyle();
         $position = $this->getPosition();
+        if($health === false){
+            $health = $player->getHealth();
+        }
 
         if($style === false || $position === false){
             return false;
@@ -175,7 +136,7 @@ class Loader extends PluginBase implements Listener{
 
         switch($style){
             case "default":
-                $style = "[" . $player->getHealth() . "/" . $player->getMaxHealth() . "]";
+                $style = "[" . $health . "/" . $player->getMaxHealth() . "]";
                 break;
         }
 
