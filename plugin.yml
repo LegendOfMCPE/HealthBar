@@ -5,6 +5,28 @@ api: 1.0.0
 author: iksaku
 website: https://github.com/LegendOfMCPE/HealthBar
 
-commands: []
-
-permissions: []
+permissions:
+    healthbar:
+        default: op
+        description: "Acces any healthbar feature"
+        children:
+            healthbar.command:
+                default: op
+                description: "Acces any command feature"
+                children:
+                    healthbar.command.style:
+                        default: op
+                        description: "Modify the global style of the bar"
+                    healthbar.command.position:
+                        default: op
+                        description: "Modify the global position of the bar"
+                    healthbar.command.toggle:
+                        default: op
+                        description: "Toggle any player's bar"
+                        children:
+                            healthbar.command.toggle.use:
+                                default: op
+                                description: "Toggle your bar"
+                            healthbar.command.toggle.other:
+                                default: op
+                                description: "Toggle other player's bar"

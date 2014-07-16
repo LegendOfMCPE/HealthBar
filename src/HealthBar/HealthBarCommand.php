@@ -32,6 +32,10 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
             case 1:
                 switch($args[0]){
                     case "style":
+                        if(!$sender->hasPermission("healthbar.command.style")){
+                            $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
+                            return false;
+                        }
                         if(!$sender instanceof Player){
                             $sender->sendMessage(TextFormat::RED . "Please run this command in-game");
                         }else{
@@ -40,6 +44,10 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                         return true;
                         break;
                     case "position":
+                        if(!$sender->hasPermission("healthbar.command.position")){
+                            $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
+                            return false;
+                        }
                         if(!$sender instanceof Player){
                             $sender->sendMessage(TextFormat::RED . "Please run this command in-game");
                         }else{
@@ -48,6 +56,10 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                         return true;
                         break;
                     case "toggle":
+                        if(!$sender->hasPermission("healthbar.command.toggle")){
+                            $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
+                            return false;
+                        }
                         if(!$sender instanceof Player){
                             $sender->sendMessage(TextFormat::RED . "Usage: /healthbar toggle <on|off> <player>");
                         }else{
@@ -64,6 +76,10 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
             case 2:
                 switch($args[0]){
                     case "style":
+                        if(!$sender->hasPermission("healthbar.command.style")){
+                            $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
+                            return false;
+                        }
                         switch($args[1]){
                             case "default":
                                 $this->plugin->setStyle($args[1]);
@@ -77,6 +93,10 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                         return true;
                         break;
                     case "position":
+                        if(!$sender->hasPermission("healthbar.command.position")){
+                            $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
+                            return false;
+                        }
                         switch($args[1]){
                             case "above":
                             case "under":
@@ -93,6 +113,10 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                         return true;
                         break;
                     case "toggle":
+                        if(!$sender->hasPermission("healthbar.command.toggle.use")){
+                            $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
+                            return false;
+                        }
                         if(!$sender instanceof Player){
                             $sender->sendMessage(TextFormat::RED . "Usage: /healthbar toggle <on|off> <player>");
                         }
@@ -122,6 +146,10 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                     $sender->sendMessage(TextFormat::RED . "Usage: " . $this->getUsage());
                     return false;
                 }else{
+                    if(!$sender->hasPermission("healthbar.command.toggle.other")){
+                        $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
+                        return false;
+                    }
                     $player = $this->plugin->getPlayer($args[2]);
                     if($player === false){
                         $sender->sendMessage(TextFormat::RED . "[Error] Player not found.");
