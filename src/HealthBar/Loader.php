@@ -80,6 +80,8 @@ class Loader extends PluginBase{
         $style = $this->getConfig()->get("style");
         if($style == "default"){
             return "default";
+        }elseif($style == "retro"){
+            return "retro";
         }else{
             return false;
         }
@@ -126,6 +128,7 @@ class Loader extends PluginBase{
     public function updateHealthBar(Player $player, $health = false){
         $style = $this->getStyle();
         $position = $this->getPosition();
+        $maxhealth = $player->getMaxHealth()
         if($health === false){
             $health = $player->getHealth();
         }
@@ -136,7 +139,21 @@ class Loader extends PluginBase{
 
         switch($style){
             case "default":
-                $style = "[" . $health . "/" . $player->getMaxHealth() . "]";
+                $style = "[" . $health . "/" . $maxhealth . "]";
+                break;
+            case "retro":
+                $bar = "";
+                $h = $health;
+                $nh = $maxhealth - $health;
+                while($nh >= 1){
+                    $bar = $bar . ":";
+                    $nh--;
+                }
+                while($h >= 1){
+                    $bar = $bar . "|";
+                    $h--;
+                }
+                $style = $bar;
                 break;
         }
 
