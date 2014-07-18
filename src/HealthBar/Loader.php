@@ -129,14 +129,33 @@ class Loader extends PluginBase{
         if($health === false){
             $health = $player->getHealth();
         }
+        $maxhealth = $player->getMaxHealth();
 
         if($style === false || $position === false){
             return false;
         }
 
         switch($style){
+            case "retro":
+                if($maxhealth === 20) {
+                    $bar = "";
+                    $h = $health;
+                    $nh = 20 - $health;
+                    while($nh >= 1) {
+                        $bar = $bar . ":";
+                        $nh--;
+                    }
+                    while($h >= 1) {
+                        $bar = $bar . "|";
+                        $h--;
+                    }
+                    $style = $bar;
+                    break;
+                } else {
+                    $style = "default";
+                }
             case "default":
-                $style = "[" . $health . "/" . $player->getMaxHealth() . "]";
+                $style = "[" . $health . "/" . $maxhealth . "]";
                 break;
         }
 
