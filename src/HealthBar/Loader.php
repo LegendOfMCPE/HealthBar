@@ -5,44 +5,44 @@ use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 
-class Loader extends PluginBase{
+class Loader extends PluginBase {
     private $canRemove;
 
-    public function onEnable(){
+    public function onEnable() {
         $this->saveDefaultConfig();
         $this->getServer()->getCommandMap()->register("healthbar", new HealthBarCommand($this));
         $this->getServer()->getPluginManager()->registerEvents(new EventHandler($this), $this);
         $this->checkConfiguration();
     }
 
-    public function onDisable(){
-        if($this->canRemove === true){
-            foreach($this->getServer()->getOnlinePlayers() as $p){
+    public function onDisable() {
+        if($this->canRemove === true) {
+            foreach($this->getServer()->getOnlinePlayers() as $p) {
                 $this->removeHealthBar($p);
             }
         }
     }
 
-    private function checkConfiguration(){
-        if(!$this->getStyle()){
+    private function checkConfiguration() {
+        if(!$this->getStyle()) {
             $this->getLogger()->info(TextFormat::YELLOW . "[HealthBar] " . TextFormat::RED . "Unknown style given, HealthBar will be disabled!");
             $this->getServer()->getPluginManager()->disablePlugin($this);
             $this->setEnabled(false);
             return false;
-        }elseif(!$this->getPosition()){
+        } else if(!$this->getPosition()) {
             $this->getLogger()->info(TextFormat::YELLOW . "[HealthBar] " . TextFormat::RED . "Unknown position given, HealthBar will be disabled!");
             $this->getServer()->getPluginManager()->disablePlugin($this);
             $this->setEnabled(false);
             return false;
-        }else{
+        } else {
            $this->enableHealthBar();
             return true;
         }
     }
 
-    private function enableHealthBar(){
+    private function enableHealthBar() {
         $this->canRemove = true;
-        foreach($this->getServer()->getOnlinePlayers() as $p){
+        foreach($this->getServer()->getOnlinePlayers() as $p) {
             $this->updateHealthBar($p);
         }
     }
@@ -62,52 +62,52 @@ class Loader extends PluginBase{
      *
      */
 
-    public function getPlayer($player){
+    public function getPlayer($player) {
         $r = "";
         foreach($this->getServer()->getOnlinePlayers() as $p){
-            if(strtolower($p->getDisplayName()) == strtolower($player) || strtolower($p->getName()) == strtolower($player)){
+            if(strtolower($p->getDisplayName()) == strtolower($player) || strtolower($p->getName()) == strtolower($player)) {
                 $r = $this->getServer()->getPlayerExact($p->getName());
             }
         }
-        if($r == ""){
+        if($r == "") {
             return false;
-        }else{
+        } else {
             return $r;
         }
     }
 
-    public function getStyle(){
+    public function getStyle() {
         $style = $this->getConfig()->get("style");
-        if($style == "default"){
+        if($style == "default") {
             return "default";
         }else{
             return false;
         }
     }
 
-    public function getPosition(){
+    public function getPosition() {
         $position = $this->getConfig()->get("position");
-        if($position == "above" || $position == "under" || $position == "left" || $position == "right"){
+        if($position == "above" || $position == "under" || $position == "left" || $position == "right") {
             return $position;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public function setStyle($style){
-        switch($style){
+    public function setStyle($style) {
+        switch($style) {
             case "default":
                 $this->getConfig()->set("style", $style);
                 break;
         }
         $this->getConfig()->save();
-        foreach($this->getServer()->getOnlinePlayers() as $p){
+        foreach($this->getServer()->getOnlinePlayers() as $p) {
             $this->updateHealthBar($p);
         }
         return true;
     }
 
-    public function setPosition($position){
+    public function setPosition($position) {
         switch($position){
             case "above":
             case "under":
@@ -117,30 +117,45 @@ class Loader extends PluginBase{
                 break;
         }
         $this->getConfig()->save();
-        foreach($this->getServer()->getOnlinePlayers() as $p){
+        foreach($this->getServer()->getOnlinePlayers() as $p) {
             $this->updateHealthBar($p);
         }
         return true;
     }
 
-    public function updateHealthBar(Player $player, $health = false){
+    public function updateHealthBar(Player $player, $health = false) {
         $style = $this->getStyle();
         $position = $this->getPosition();
         if($health === false){
             $health = $player->getHealth();
         }
+        $maxhealth = $player->getMaxHealth();
 
-        if($style === false || $position === false){
+        if($style === false || $position === false) {
             return false;
         }
 
-        switch($style){
+        switch($style) {
             case "default":
-                $style = "[" . $health . "/" . $player->getMaxHealth() . "]";
+                $style = "[" . $health . "/" . $maxhealth . "]";
+                break;
+            case "retro":
+                $bar = "";
+                $h = $health;
+                $nh = $maxhealth - $health;
+                while($nh >= 1) {
+                    $bar = $bar . ":";
+                    $nh--;
+                }
+                while($h >= 1) {
+                    $bar = $bar . "|";
+                    $h--;
+                }
+                $style = $bar;
                 break;
         }
 
-        switch($position){
+        switch($position) {
             case "above":
                 $player->setNameTag($style . "\n" . $player->getDisplayName());
                 break;
@@ -157,8 +172,8 @@ class Loader extends PluginBase{
         return true;
     }
 
-    public function removeHealthBar(Player $player){
-        if($this->canRemove === true){
+    public function removeHealthBar(Player $player) {
+        if($this->canRemove === true) {
             $player->setNameTag($player->getDisplayName());
         }
     }
