@@ -130,7 +130,7 @@ class Loader extends PluginBase{
     public function updateHealthBar(Player $player, $health = false){
         $style = $this->getStyle();
         $position = $this->getPosition();
-        $maxhealth = $player->getMaxHealth()
+        $maxhealth = $player->getMaxHealth();
         if($health === false){
             $health = $player->getHealth();
         }
