@@ -82,6 +82,8 @@ class Loader extends PluginBase{
             return "default";
         }elseif($style == "retro"){
             return "retro";
+        }elseif($style == "slim"){
+            return "slim";
         }else{
             return false;
         }
@@ -151,6 +153,20 @@ class Loader extends PluginBase{
                 }
                 while($h >= 1){
                     $bar = $bar . "|";
+                    $h--;
+                }
+                $style = $bar;
+                break;
+            case "slim":
+                $bar = "";
+                $h = $health;
+                $nh = $maxhealth - $health;
+                while($nh >= 1){
+                    $bar = $bar . "-";
+                    $nh--;
+                }
+                while($h >= 1){
+                    $bar = $bar . "=";
                     $h--;
                 }
                 $style = $bar;
