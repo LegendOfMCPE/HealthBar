@@ -82,6 +82,8 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                         }
                         switch($args[1]){
                             case "default":
+                            case "retro":
+                            case "slim":
                                 $this->plugin->setStyle($args[1]);
                                 $sender->sendMessage(TextFormat::YELLOW . "[HealthBar] Updating style...");
                                 return true;
@@ -123,12 +125,12 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                         switch($args[1]){
                             case "on":
                                 $sender->sendMessage(TextFormat::YELLOW . "Setting your HealthBar...");
-                                $this->plugin->updateHealthBar($sender);
+                                $this->plugin->setHealthBar($sender, true, $sender->getHealth());
                                 return true;
                                 break;
                             case "off":
                                 $sender->sendMessage(TextFormat::YELLOW . "Removing your HealthBar...");
-                                $this->plugin->removeHealthBar($sender);
+                                $this->plugin->setHealthBar($sender, false);
                                 return true;
                                 break;
                             default:
@@ -160,13 +162,13 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                             case "on":
                                 $sender->sendMessage(TextFormat::YELLOW . "Setting player' HealthBar...");
                                 $player->sendMessage(TextFormat::YELLOW . "Setting your HealthBar...");
-                                $this->plugin->updateHealthBar($player);
+                                $this->plugin->setHealthBar($player, true, $player->getHealth());
                                 return true;
                                 break;
                             case "off":
                                 $sender->sendMessage(TextFormat::YELLOW . "Removing player' HealthBar...");
                                 $player->sendMessage(TextFormat::YELLOW . "Removing your HealthBar...");
-                                $this->plugin->removeHealthBar($player);
+                                $this->plugin->setHealthBar($player, false);
                                 return true;
                                 break;
                             default:
