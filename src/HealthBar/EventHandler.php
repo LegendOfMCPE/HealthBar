@@ -8,6 +8,7 @@ use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
+use pocketmine\Server;
 
 class EventHandler implements Listener{
     /** @var \HealthBar\Loader  */
@@ -26,8 +27,6 @@ class EventHandler implements Listener{
             $health = $entity->getHealth() + $event->getAmount();
             if($health > $entity->getMaxHealth()){
                 $health = $entity->getMaxHealth();
-            }elseif($health <= 0){
-                $health = 0;
             }
             $this->plugin->updateHealthBar($entity, $health);
         }
@@ -39,8 +38,12 @@ class EventHandler implements Listener{
     public function onHealthLose(EntityDamageEvent $event){
         $entity = $event->getEntity();
         if($entity instanceof Player && !$event->isCancelled()){
-            $health = $entity->getHealth() - $event->getFinalDamage();
-            $this->plugin->updateHealthBar($entity, $health);
+            if(Server::getGamemodeString($entity->getGamemode()) === "SPECTATOR" || Server::getGamemodeString($entity->getGamemode()) ===  "CREATIVE"){
+                $event->setCancelled(true);
+            }else{
+                $health = $entity->getHealth() - $event->getFinalDamage();
+                $this->plugin->updateHealthBar($entity, $health);
+            }
         }
     }
 
@@ -50,8 +53,12 @@ class EventHandler implements Listener{
     public function onAttack(EntityDamageByEntityEvent $event){
         $entity = $event->getEntity();
         if($entity instanceof Player && !$event->isCancelled()){
-            $health = $entity->getHealth() - $event->getFinalDamage();
-            $this->plugin->updateHealthBar($entity, $health);
+            if(Server::getGamemodeString($entity->getGamemode()) === "SPECTATOR" || Server::getGamemodeString($entity->getGamemode()) ===  "CREATIVE"){
+                $event->setCancelled(true);
+            }else{
+                $health = $entity->getHealth() - $event->getFinalDamage();
+                $this->plugin->updateHealthBar($entity, $health);
+            }
         }
     }
 
