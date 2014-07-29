@@ -30,17 +30,13 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
         }
         switch(count($args)){
             case 1:
-                switch($args[0]){
+                switch(strtolower($args[0])){
                     case "style":
                         if(!$sender->hasPermission("healthbar.command.style")){
                             $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
                             return false;
                         }
-                        if(!$sender instanceof Player){
-                            $sender->sendMessage(TextFormat::RED . "Please run this command in-game");
-                        }else{
-                            $sender->sendMessage(TextFormat::RED . "Usage: /healthbar style <desired style>");
-                        }
+                        $sender->sendMessage(TextFormat::RED . "Usage: /healthbar style <desired style>");
                         return true;
                         break;
                     case "position":
@@ -48,11 +44,7 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                             $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
                             return false;
                         }
-                        if(!$sender instanceof Player){
-                            $sender->sendMessage(TextFormat::RED . "Please run this command in-game");
-                        }else{
-                            $sender->sendMessage(TextFormat::RED . "Usage: /healthbar position <desired position>");
-                        }
+                        $sender->sendMessage(TextFormat::RED . "Usage: /healthbar position <desired position>");
                         return true;
                         break;
                     case "toggle":
@@ -74,17 +66,15 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                 return true;
                 break;
             case 2:
-                switch($args[0]){
+                switch(strtolower($args[0])){
                     case "style":
                         if(!$sender->hasPermission("healthbar.command.style")){
                             $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
                             return false;
                         }
-                        switch($args[1]){
+                        switch(strtolower($args[1])){
                             case "default":
-                            case "retro":
-                            case "slim":
-                                $this->plugin->setStyle($args[1]);
+                                $this->plugin->setStyle(strtolower($args[1]));
                                 $sender->sendMessage(TextFormat::YELLOW . "[HealthBar] Updating style...");
                                 return true;
                                 break;
@@ -99,12 +89,12 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                             $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
                             return false;
                         }
-                        switch($args[1]){
+                        switch(strtolower($args[1])){
                             case "above":
                             case "under":
                             case "left":
                             case "right":
-                                $this->plugin->setPosition($args[1]);
+                                $this->plugin->setPosition(strtolower($args[1]));
                                 $sender->sendMessage(TextFormat::YELLOW . "[HealthBar] Updating position...");
                                 return true;
                                 break;
@@ -122,7 +112,7 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                         if(!$sender instanceof Player){
                             $sender->sendMessage(TextFormat::RED . "Usage: /healthbar toggle <on|off> <player>");
                         }
-                        switch($args[1]){
+                        switch(strtolower($args[1])){
                             case "on":
                                 $sender->sendMessage(TextFormat::YELLOW . "Setting your HealthBar...");
                                 $this->plugin->setHealthBar($sender, true, $sender->getHealth());
@@ -146,7 +136,7 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                 return true;
                 break;
             case 3:
-                if($args[0] != "toggle"){
+                if(strtolower($args[0]) != "toggle"){
                     $sender->sendMessage(TextFormat::RED . "Usage: " . $this->getUsage());
                     return false;
                 }else{
@@ -158,7 +148,7 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                     if($player === false){
                         $sender->sendMessage(TextFormat::RED . "[Error] Player not found.");
                     }else{
-                        switch($args[1]){
+                        switch(strtolower($args[1])){
                             case "on":
                                 $sender->sendMessage(TextFormat::YELLOW . "Setting player' HealthBar...");
                                 $player->sendMessage(TextFormat::YELLOW . "Setting your HealthBar...");

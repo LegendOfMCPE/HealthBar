@@ -83,11 +83,9 @@ class Loader extends PluginBase{
     }
 
     public function getStyle(){
-        $style = $this->getConfig()->get("style");
-        switch($style){
+        $style = strtolower($this->getConfig()->get("style"));
+        switch(strtolower($style)){
             case "default":
-            case "retro":
-            case "slim":
                 return $style;
                 break;
         }
@@ -95,7 +93,7 @@ class Loader extends PluginBase{
     }
 
     public function getPosition(){
-        $position = $this->getConfig()->get("position");
+        $position = strtolower($this->getConfig()->get("position"));
         switch($position){
             case "above":
             case "under":
@@ -108,10 +106,9 @@ class Loader extends PluginBase{
     }
 
     public function setStyle($style){
+        $style = strtolower($style);
         switch($style){
             case "default":
-            case "retro":
-            case "slim":
                 $this->getConfig()->set("style", $style);
                 $this->getConfig()->save();
                 break;
@@ -123,6 +120,7 @@ class Loader extends PluginBase{
     }
 
     public function setPosition($position){
+        $position = strtolower($position);
         switch($position){
             case "above":
             case "under":
@@ -159,16 +157,18 @@ class Loader extends PluginBase{
             case "default":
                 $style = "[" . $health . "/" . $maxhealth . "]";
                 break;
-            case "retro":
+            /*case "retro":
                 $bar = "";
                 $h = $health;
                 $mh = $maxhealth - $health;
-                while($h >= 1){
+                while($h >= 1 && $h % 2){
                     $bar .= $bar . "|";
                     $h--;
+                    $h--;
                 }
-                while($mh >= 1){
+                while($mh >= 1 && $mh % 2){
                     $bar .= $bar . ":";
+                    $mh--;
                     $mh--;
                 }
                 $style = $bar;
@@ -177,16 +177,18 @@ class Loader extends PluginBase{
                 $bar = "";
                 $h = $health;
                 $mh = $maxhealth - $health;
-                while($h >= 1){
+                while($h >= 1 && $h % 2){
                     $bar .= $bar . "=";
                     $h--;
+                    $h--;
                 }
-                while($mh >= 1){
+                while($mh >= 1 && $mh % 2){
                     $bar .= $bar . "-";
+                    $mh--;
                     $mh--;
                 }
                 $style = $bar;
-                break;
+                break;*/
         }
 
         switch($position){
