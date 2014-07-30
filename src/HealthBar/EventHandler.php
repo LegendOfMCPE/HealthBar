@@ -1,7 +1,6 @@
 <?php
 namespace HealthBar;
 
-use EssentialsPE\Events\PlayerNickChangeEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
@@ -16,6 +15,14 @@ class EventHandler implements Listener{
 
     public function __construct(Loader $plugin){
         $this->plugin = $plugin;
+    }
+
+    /**
+     * @param PlayerJoinEvent $event
+     */
+    public function onPlayerJoin(PlayerJoinEvent $event){
+        $player = $event->getPlayer();
+        $this->plugin->updateHealthBar($player);
     }
 
     /**
@@ -60,21 +67,5 @@ class EventHandler implements Listener{
                 $this->plugin->updateHealthBar($entity, $health);
             }
         }
-    }
-
-    /**
-     * @param PlayerNickChangeEvent $event
-     */
-    public function onNickChange(PlayerNickChangeEvent $event){
-        $player = $event->getPlayer();
-        $nick = $event->getNewNick();
-        $nametag = $event->getNameTag();
-
-        $bar = $this->plugin->getHealthBar();
-        $bar = str_replace("maxhealth", $player->getMaxHealth(), $bar);
-        $bar = str_replace("health", $player->getHealth(), $bar);
-        $bar = str_replace("name", $nick, $bar);
-
-        $event->setNameTag($bar);
     }
 } 

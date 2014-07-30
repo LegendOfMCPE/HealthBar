@@ -1,6 +1,7 @@
 <?php
 namespace HealthBar;
 
+use HealthBar\OtherEvents\EssentialsPEEvents;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
@@ -16,9 +17,11 @@ class Loader extends PluginBase{
         $this->getServer()->getCommandMap()->register("healthbar", new HealthBarCommand($this));
         $this->getServer()->getPluginManager()->registerEvents(new EventHandler($this), $this);
         $this->checkConfiguration();
+
         $ess = $this->getServer()->getPluginManager()->getPlugin("EssentialsPE");
         if($ess instanceof Plugin && $ess->isEnabled()){
             $this->essentialspe = new EssentialsPE();
+            $this->getServer()->getPluginManager()->registerEvents(new EssentialsPEEvents($this), $this);
         }
     }
 
