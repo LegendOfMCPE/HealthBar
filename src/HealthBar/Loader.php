@@ -6,10 +6,8 @@ use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
-use EssentialsPE\Loader as EssentialsPE;
 
 class Loader extends PluginBase{
-    public $essentialspe;
     private $canRemove;
 
     public function onEnable(){
@@ -19,8 +17,7 @@ class Loader extends PluginBase{
         $this->checkConfiguration();
 
         $ess = $this->getServer()->getPluginManager()->getPlugin("EssentialsPE");
-        if($ess instanceof Plugin && $ess->isEnabled()){
-            $this->essentialspe = new \WeakRef($ess); // this plugin is not disabled when EssentialsPE is disabled, so keep a *weak* reference so that EssentialsPE can be properly garbaged on unload.
+        if($ess instanceof Plugin and $ess->isEnabled()){
             $this->getServer()->getPluginManager()->registerEvents(new EssentialsPEEvents($this), $this);
         }
     }
