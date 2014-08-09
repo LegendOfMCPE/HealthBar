@@ -9,6 +9,7 @@ use pocketmine\utils\TextFormat;
 use EssentialsPE\Loader as EssentialsPE;
 
 class Loader extends PluginBase{
+    /** @var \WeakRef<EssentialsPE> */
     public $essentialspe;
     private $canRemove;
 
@@ -19,8 +20,8 @@ class Loader extends PluginBase{
         $this->checkConfiguration();
 
         $ess = $this->getServer()->getPluginManager()->getPlugin("EssentialsPE");
-        if($ess instanceof Plugin && $ess->isEnabled()){
-            $this->essentialspe = new EssentialsPE();
+        if(strtolower(get_class($ess)) === "essentialspe\\loader" and $ess->isEnabled()){
+            $this->essentialspe = new \WeakRef($ess); // an unloaded plugin must be GC'ed, so no strong reference on it that prevents it from being unloaded. Using WeakRef is the most convenient method.
             $this->getServer()->getPluginManager()->registerEvents(new EssentialsPEEvents($this), $this);
         }
     }
