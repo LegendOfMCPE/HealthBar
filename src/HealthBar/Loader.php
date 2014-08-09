@@ -20,7 +20,7 @@ class Loader extends PluginBase{
 
         $ess = $this->getServer()->getPluginManager()->getPlugin("EssentialsPE");
         if($ess instanceof Plugin && $ess->isEnabled()){
-            $this->essentialspe = new EssentialsPE();
+            $this->essentialspe = new \WeakRef($ess); // this plugin is not disabled when EssentialsPE is disabled, so keep a *weak* reference so that EssentialsPE can be properly garbaged on unload.
             $this->getServer()->getPluginManager()->registerEvents(new EssentialsPEEvents($this), $this);
         }
     }
