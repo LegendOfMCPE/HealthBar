@@ -30,7 +30,7 @@ class EventHandler implements Listener{
      */
     public function onRegainHealth(EntityRegainHealthEvent $event){
         $entity = $event->getEntity();
-        if($entity instanceof Player && !$event->isCancelled()){
+        if($entity instanceof Player){
             $health = $entity->getHealth() + $event->getAmount();
             if($health > $entity->getMaxHealth()){
                 $health = $entity->getMaxHealth();
@@ -44,8 +44,8 @@ class EventHandler implements Listener{
      */
     public function onHealthLose(EntityDamageEvent $event){
         $entity = $event->getEntity();
-        if($entity instanceof Player && !$event->isCancelled()){
-            if(Server::getGamemodeString($entity->getGamemode()) === "SPECTATOR" || Server::getGamemodeString($entity->getGamemode()) ===  "CREATIVE"){
+        if($entity instanceof Player){
+            if($entity->getServer()->getGamemodeFromString($entity->getGamemode()) === 1|3){
                 $event->setCancelled(true);
             }else{
                 $health = $entity->getHealth() - $event->getFinalDamage();
@@ -59,8 +59,8 @@ class EventHandler implements Listener{
      */
     public function onAttack(EntityDamageByEntityEvent $event){
         $entity = $event->getEntity();
-        if($entity instanceof Player && !$event->isCancelled()){
-            if(Server::getGamemodeString($entity->getGamemode()) === "SPECTATOR" || Server::getGamemodeString($entity->getGamemode()) ===  "CREATIVE"){
+        if($entity instanceof Player){
+            if($entity->getServer()->getGamemodeFromString($entity->getGamemode()) === 1|3){
                 $event->setCancelled(true);
             }else{
                 $health = $entity->getHealth() - $event->getFinalDamage();

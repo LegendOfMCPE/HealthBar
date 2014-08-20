@@ -32,18 +32,11 @@ class Loader extends PluginBase{
 
     private function checkConfiguration(){
         if(!$this->getStyle()){
-            $this->getLogger()->info(TextFormat::YELLOW . "[HealthBar] " . TextFormat::RED . "Unknown style given, HealthBar will be disabled!");
-            $this->getServer()->getPluginManager()->disablePlugin($this);
-            $this->setEnabled(false);
-            return false;
+            $this->setStyle("default");
         }elseif(!$this->getPosition()){
-            $this->getLogger()->info(TextFormat::YELLOW . "[HealthBar] " . TextFormat::RED . "Unknown position given, HealthBar will be disabled!");
-            $this->getServer()->getPluginManager()->disablePlugin($this);
-            $this->setEnabled(false);
-            return false;
+            $this->setPosition("above");
         }else{
            $this->enableHealthBar();
-            return true;
         }
     }
 
@@ -116,6 +109,7 @@ class Loader extends PluginBase{
         foreach($this->getServer()->getOnlinePlayers() as $p){
             $this->updateHealthBar($p, $p->getMaxHealth(), $p->getDisplayName());
         }
+        $this->getConfig()->reload();
         return true;
     }
 
@@ -133,6 +127,7 @@ class Loader extends PluginBase{
         foreach($this->getServer()->getOnlinePlayers() as $p){
             $this->updateHealthBar($p, $p->getMaxHealth(), $p->getDisplayName());
         }
+        $this->getConfig()->reload();
         return true;
     }
 
@@ -142,6 +137,10 @@ class Loader extends PluginBase{
         }
         $style = $this->getStyle();
         $position = $this->getPosition();
+        if($style === false || $position === false){
+            return false;
+        }
+
         $maxhealth = $player->getMaxHealth();
         if($health === false){
             $health = $player->getHealth();
@@ -149,62 +148,12 @@ class Loader extends PluginBase{
             $name = $player->getDisplayName();
         }
 
-        if($style === false || $position === false){
-            return false;
-        }
+        $bar = $this->getHealthBar();
+        $bar = str_replace("maxhealth", $maxhealth, $bar);
+        $bar = str_replace("health", $health, $bar);
+        $bar = str_replace("name", $name, $bar);
 
-        switch($style){
-            case "default":
-                $style = "[" . $health . "/" . $maxhealth . "]";
-                break;
-            /*case "retro":
-                $bar = "";
-                $h = $health;
-                $mh = $maxhealth - $health;
-                while($h >= 1 && $h % 2){
-                    $bar .= $bar . "|";
-                    $h--;
-                    $h--;
-                }
-                while($mh >= 1 && $mh % 2){
-                    $bar .= $bar . ":";
-                    $mh--;
-                    $mh--;
-                }
-                $style = $bar;
-                break;
-            case "slim":
-                $bar = "";
-                $h = $health;
-                $mh = $maxhealth - $health;
-                while($h >= 1 && $h % 2){
-                    $bar .= $bar . "=";
-                    $h--;
-                    $h--;
-                }
-                while($mh >= 1 && $mh % 2){
-                    $bar .= $bar . "-";
-                    $mh--;
-                    $mh--;
-                }
-                $style = $bar;
-                break;*/
-        }
-
-        switch($position){
-            case "above":
-                $player->setNameTag($style . "\n" . $name);
-                break;
-            case "under":
-                $player->setNameTag($name . "\n" . $style);
-                break;
-            case "left":
-                $player->setNameTag($style . " " . $name);
-                break;
-            case "right":
-                $player->setNameTag($name . " " . $style);
-                break;
-        }
+        $player->setNameTag($bar);
         return true;
     }
 

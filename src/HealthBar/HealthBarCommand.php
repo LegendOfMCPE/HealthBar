@@ -24,10 +24,6 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
         if(!$this->testPermission($sender)){
             return false;
         }
-        if(count($args) < 1 || count($args) > 3){
-            $sender->sendMessage(TextFormat::RED . "Usage: " . $this->getUsage());
-            return false;
-        }
         switch(count($args)){
             case 1:
                 switch(strtolower($args[0])){
@@ -36,34 +32,26 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                             $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
                             return false;
                         }
-                        $sender->sendMessage(TextFormat::RED . "Usage: /healthbar style <desired style>");
-                        return true;
+                        $sender->sendMessage(TextFormat::RED . ($sender instanceof Player ? "" : "Usage: ") . "/healthbar style <desired style>");
                         break;
                     case "position":
                         if(!$sender->hasPermission("healthbar.command.position")){
                             $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
                             return false;
                         }
-                        $sender->sendMessage(TextFormat::RED . "Usage: /healthbar position <desired position>");
-                        return true;
+                        $sender->sendMessage(TextFormat::RED . ($sender instanceof Player ? "" : "Usage: ") . "/healthbar position <desired position>");
                         break;
                     case "toggle":
                         if(!$sender->hasPermission("healthbar.command.toggle")){
                             $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
                             return false;
                         }
-                        if(!$sender instanceof Player){
-                            $sender->sendMessage(TextFormat::RED . "Usage: /healthbar toggle <on|off> <player>");
-                        }else{
-                            $sender->sendMessage(TextFormat::RED . "Usage: /healthbar toggle <on|off> [player]");
-                        }
-                        return true;
+                        $sender->sendMessage(TextFormat::RED . ($sender instanceof Player ? "" : "Usage: ") . "/healthbar toggle <on|off> " . ($sender instanceof Player ? "[player]" : "<player>"));
                         break;
                     default:
-                        $sender->sendMessage(TextFormat::RED . "Usage: " . $this->getUsage());
+                        $sender->sendMessage(TextFormat::RED . ($sender instanceof Player ? "" : "Usage: ") . $this->getUsage());
                         break;
                 }
-                return true;
                 break;
             case 2:
                 switch(strtolower($args[0])){
@@ -76,13 +64,11 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                             case "default":
                                 $this->plugin->setStyle(strtolower($args[1]));
                                 $sender->sendMessage(TextFormat::YELLOW . "[HealthBar] Updating style...");
-                                return true;
                                 break;
                             default:
                                 $sender->sendMessage(TextFormat::RED . "Unknown style given, HealthBar will not be updated.");
                                 break;
                         }
-                        return true;
                         break;
                     case "position":
                         if(!$sender->hasPermission("healthbar.command.position")){
@@ -96,13 +82,11 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                             case "right":
                                 $this->plugin->setPosition(strtolower($args[1]));
                                 $sender->sendMessage(TextFormat::YELLOW . "[HealthBar] Updating position...");
-                                return true;
                                 break;
                             default:
                                 $sender->sendMessage(TextFormat::RED . "Unknown position given, HealthBar will not be updated.");
                                 break;
                         }
-                        return true;
                         break;
                     case "toggle":
                         if(!$sender->hasPermission("healthbar.command.toggle.use")){
@@ -111,67 +95,60 @@ class HealthBarCommand extends Command implements PluginIdentifiableCommand{
                         }
                         if(!$sender instanceof Player){
                             $sender->sendMessage(TextFormat::RED . "Usage: /healthbar toggle <on|off> <player>");
+                            return false;
                         }
                         switch(strtolower($args[1])){
                             case "on":
                                 $sender->sendMessage(TextFormat::YELLOW . "Setting your HealthBar...");
-                                $this->plugin->setHealthBar($sender, true, $sender->getHealth());
-                                return true;
+                                $this->plugin->setHealthBar($sender, true);
                                 break;
                             case "off":
                                 $sender->sendMessage(TextFormat::YELLOW . "Removing your HealthBar...");
                                 $this->plugin->setHealthBar($sender, false);
-                                return true;
                                 break;
                             default:
                                 $sender->sendMessage(TextFormat::RED . "Usage: /healthbar toggle <on|off> [player]");
                                 break;
                         }
-                        return true;
                         break;
                     default:
-                        $sender->sendMessage(TextFormat::RED . "Usage: " . $this->getUsage());
+                        $sender->sendMessage(TextFormat::RED . ($sender instanceof Player ? "" : "Usage: ") . $this->getUsage());
                         break;
                 }
-                return true;
                 break;
             case 3:
-                if(strtolower($args[0]) != "toggle"){
+                if(!$sender->hasPermission("healthbar.command.toggle.other")){
+                    $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
+                    return false;
+                }
+                if(strtolower($args[0]) !== "toggle"){
                     $sender->sendMessage(TextFormat::RED . "Usage: " . $this->getUsage());
                     return false;
-                }else{
-                    if(!$sender->hasPermission("healthbar.command.toggle.other")){
-                        $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
-                        return false;
-                    }
-                    $player = $this->plugin->getPlayer($args[2]);
-                    if($player === false){
-                        $sender->sendMessage(TextFormat::RED . "[Error] Player not found.");
-                    }else{
-                        switch(strtolower($args[1])){
-                            case "on":
-                                $sender->sendMessage(TextFormat::YELLOW . "Setting player' HealthBar...");
-                                $player->sendMessage(TextFormat::YELLOW . "Setting your HealthBar...");
-                                $this->plugin->setHealthBar($player, true, $player->getHealth());
-                                return true;
-                                break;
-                            case "off":
-                                $sender->sendMessage(TextFormat::YELLOW . "Removing player' HealthBar...");
-                                $player->sendMessage(TextFormat::YELLOW . "Removing your HealthBar...");
-                                $this->plugin->setHealthBar($player, false);
-                                return true;
-                                break;
-                            default:
-                                if(!$sender instanceof Player){
-                                    $sender->sendMessage(TextFormat::RED . "Usage: /healthbar toggle <on|off> <player>");
-                                }else{
-                                    $sender->sendMessage(TextFormat::RED . "Usage: /healthbar toggle <on|off> [player]");
-                                }
-                                break;
-                        }
-                    }
                 }
-                return true;
+                $player = $this->plugin->getPlayer($args[2]);
+                if($player === false){
+                    $sender->sendMessage(TextFormat::RED . "[Error] Player not found.");
+                    return false;
+                }
+                switch(strtolower($args[1])){
+                    case "on":
+                        $sender->sendMessage(TextFormat::YELLOW . "Setting $args[2]'" . (substr($args[2], -1, 1) === "s" ? "" : "s") . " HealthBar...");
+                        $player->sendMessage(TextFormat::YELLOW . "Setting your HealthBar...");
+                        $this->plugin->setHealthBar($player, true);
+                        break;
+                    case "off":
+                        $sender->sendMessage(TextFormat::YELLOW . "Removing $args[2]'" . (substr($args[2], -1, 1) === "s" ? "" : "s") . " HealthBar...");
+                        $player->sendMessage(TextFormat::YELLOW . "Removing your HealthBar...");
+                        $this->plugin->setHealthBar($player, false);
+                        break;
+                    default:
+                        $sender->sendMessage(TextFormat::RED . ($sender instanceof Player ? "" : "Usage: ") . "/healthbar toggle <on|off> " . ($sender instanceof Player ? "[player]" : "<player>"));
+                        break;
+                }
+                break;
+            default:
+                $sender->sendMessage(TextFormat::RED . ($sender instanceof Player ? "" : "Usage: ") . $this->getUsage());
+                return false;
                 break;
         }
         return true;
