@@ -53,19 +53,4 @@ class EventHandler implements Listener{
             }
         }
     }
-
-    /**
-     * @param EntityDamageByEntityEvent $event
-     */
-    public function onAttack(EntityDamageByEntityEvent $event){
-        $entity = $event->getEntity();
-        if($entity instanceof Player){
-            if($entity->getServer()->getGamemodeFromString($entity->getGamemode()) === 1|3){
-                $event->setCancelled(true);
-            }else{
-                $health = $entity->getHealth() - $event->getFinalDamage();
-                $this->plugin->updateHealthBar($entity, $health);
-            }
-        }
-    }
 } 
