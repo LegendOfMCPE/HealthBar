@@ -1,7 +1,7 @@
 name: HealthBar
 main: HealthBar\Loader
 version: 1.0.0
-api: 1.0.0
+api: 1.4.0
 author: LegendOfMCPE
 website: https://github.com/LegendOfMCPE/HealthBar
 softdepend: EssentialsPE
